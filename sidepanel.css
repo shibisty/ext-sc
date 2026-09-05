@@ -1,0 +1,47 @@
+/* Overrides for the side panel, which can be resized by the user and is
+   typically wider/taller than the popup — make the layout fluid instead of
+   the popup's fixed 340px width. */
+
+body {
+  width: 100% !important;
+  min-width: 260px;
+  max-width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.app {
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.app-header {
+  padding: 16px 18px 12px;
+}
+
+.tabs {
+  padding: 0 18px;
+}
+
+.panel {
+  padding: 18px;
+  gap: 12px;
+}
+
+.action-btn {
+  padding: 13px 16px;
+  font-size: 14px;
+}
+
+/* On very narrow panels, stack the header content instead of overflowing */
+@media (max-width: 300px) {
+  .app-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .tab-btn { font-size: 11px; padding: 8px 4px; }
+}
+
+/* On wider panels, let screenshot/settings actions sit in a comfortable
+   reading column instead of stretching edge-to-edge awkwardly. */
+@media (min-width: 420px) {
+  .panel { padding: 22px 28px; }
+}

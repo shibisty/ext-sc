@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Видео и скриншоты"
+  },
+  "extDescription": {
+    "message": "Запись видео со звуком и создание скриншотов с выбором области и хоткеями."
+  },
+  "cmdToggleRecording": {
+    "message": "Начать/остановить запись видео"
+  },
+  "cmdCaptureFull": {
+    "message": "Сделать скриншот (видимая область)"
+  },
+  "cmdCaptureArea": {
+    "message": "Сделать скриншот (выбрать область)"
+  }
+}

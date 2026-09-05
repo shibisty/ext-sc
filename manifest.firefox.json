@@ -1,0 +1,76 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDescription__",
+  "version": "1.0.0",
+  "default_locale": "en",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "screenrec-toolkit@example.com",
+      "strict_min_version": "115.0"
+    }
+  },
+  "sidebar_action": {
+    "default_panel": "sidepanel.html",
+    "default_icon": "icons/icon32.png",
+    "default_title": "__MSG_extName__"
+  },
+  "permissions": [
+    "storage",
+    "downloads",
+    "downloads.open",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "notifications",
+    "clipboardWrite"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "commands": {
+    "toggle-recording": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+R",
+        "mac": "Command+Shift+R"
+      },
+      "description": "__MSG_cmdToggleRecording__"
+    },
+    "capture-full-screenshot": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "__MSG_cmdCaptureFull__"
+    },
+    "capture-area-screenshot": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+A",
+        "mac": "Command+Shift+A"
+      },
+      "description": "__MSG_cmdCaptureArea__"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["recorder.html", "select-overlay.js", "annotate-overlay.js", "gif-library/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

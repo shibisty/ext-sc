@@ -1,0 +1,158 @@
+<!doctype html>
+<html data-surface="popup">
+<head>
+  <meta charset="utf-8" />
+  <title>ScreenRec Toolkit</title>
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <img src="icons/icon32.png" alt="" />
+        <span data-i18n="appTitle">ScreenRec Toolkit</span>
+      </div>
+      <div class="header-right">
+        <div class="rec-indicator" id="recIndicator" hidden>
+          <span class="rec-dot"></span>
+          <span id="recTime">00:00</span>
+          <button class="rec-goto-btn" id="btnGotoTab" hidden data-i18n-title="goToRecordingTab" title="Go to tab">↗</button>
+        </div>
+        <button class="icon-btn" id="btnOpenSidePanel" data-i18n-title="openSidePanel" title="Open as side panel">▤</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="screenshot" data-i18n="tabScreenshot">Screenshot</button>
+      <button class="tab-btn" data-tab="video" data-i18n="tabVideo">Video</button>
+      <button class="tab-btn" data-tab="settings" data-i18n="tabSettings">Settings</button>
+    </nav>
+
+    <section class="panel active" id="panel-screenshot">
+      <button class="action-btn primary" id="btnCaptureArea">
+        <span class="icon">▦</span>
+        <span data-i18n="screenshotArea">Select area & capture</span>
+      </button>
+      <button class="action-btn" id="btnCaptureVisible">
+        <span class="icon">📷</span>
+        <span data-i18n="screenshotVisible">Capture visible area</span>
+      </button>
+      <button class="action-btn" id="btnCaptureFullPage">
+        <span class="icon">📜</span>
+        <span data-i18n="screenshotFullPage">Capture full page (scroll)</span>
+      </button>
+      <p class="hint" data-i18n="screenshotHint">PNG will be saved to your Downloads folder.</p>
+
+      <button class="action-btn subtle" id="btnCopyLastScreenshot" hidden>
+        <span class="icon">📋</span>
+        <span data-i18n="copyLastScreenshot">Copy last screenshot to clipboard</span>
+      </button>
+    </section>
+
+    <section class="panel" id="panel-video">
+      <label class="checkbox-row" id="videoAudioRow">
+        <input type="checkbox" id="chkAudio" checked />
+        <span data-i18n="videoIncludeAudio">Include audio (mic/tab/system)</span>
+      </label>
+
+      <div id="videoModeButtons">
+        <button class="action-btn primary" id="btnRecordArea" data-mode="area">
+          <span class="icon">▦</span>
+          <span data-i18n="videoModeArea">Selected area of this tab</span>
+        </button>
+        <button class="action-btn" id="btnRecordTab" data-mode="tab">
+          <span class="icon">⏺</span>
+          <span data-i18n="videoModeTab">This tab (fast, works in background)</span>
+        </button>
+        <button class="action-btn" id="btnRecordScreen" data-mode="screen">
+          <span class="icon">🖥</span>
+          <span data-i18n="videoModeScreen">Entire screen / another window</span>
+        </button>
+      </div>
+
+      <button class="action-btn stop-btn" id="btnStopVideo" hidden>
+        <span class="icon">⏹</span>
+        <span data-i18n="videoStop">Stop recording</span>
+      </button>
+
+      <p class="hint" id="videoHint" data-i18n="videoHintArea">Draws an area selection, then records only that region.</p>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsTheme">Theme</div>
+        <select id="selTheme">
+          <option value="auto" data-i18n="themeAuto">Auto (system)</option>
+          <option value="light" data-i18n="themeLight">Light</option>
+          <option value="dark" data-i18n="themeDark">Dark</option>
+        </select>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsLanguage">Language</div>
+        <select id="selLang">
+          <option value="auto" data-i18n="langAuto">Auto (browser)</option>
+          <option value="en" data-i18n="langEn">English</option>
+          <option value="ru" data-i18n="langRu">Русский</option>
+        </select>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsHotkeys">Hotkeys</div>
+        <p class="hint" data-i18n="hotkeysHint">Manage or change shortcuts in your browser's extension settings:</p>
+        <ul class="hotkey-list">
+          <li><span data-i18n="hotkeysToggleRecording">Start/stop recording</span><kbd id="kbdToggle">Ctrl+Shift+R</kbd></li>
+          <li><span data-i18n="hotkeysCaptureFull">Screenshot (visible area)</span><kbd id="kbdFull">Ctrl+Shift+S</kbd></li>
+          <li><span data-i18n="hotkeysCaptureArea">Screenshot (select area)</span><kbd id="kbdArea">Ctrl+Shift+A</kbd></li>
+        </ul>
+        <button class="action-btn" id="btnOpenShortcuts" data-i18n="openShortcutsPage">Open shortcuts settings</button>
+      </div>
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsClipboard">Clipboard</div>
+        <label class="checkbox-row">
+          <input type="checkbox" id="chkAutoClipboard" checked />
+          <span data-i18n="autoClipboardLabel">Automatically copy screenshots to clipboard</span>
+        </label>
+        <p class="hint" data-i18n="autoClipboardHint">When off, use the button below to copy the last screenshot manually.</p>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsVideoQuality">Video quality</div>
+        <select id="selVideoQuality">
+          <option value="auto" data-i18n="videoQualityAuto">Auto (browser default)</option>
+          <option value="low" data-i18n="videoQualityLow">Low (smaller file)</option>
+          <option value="medium" data-i18n="videoQualityMedium">Medium</option>
+          <option value="high" data-i18n="videoQualityHigh">High (larger file)</option>
+        </select>
+        <p class="hint" data-i18n="videoQualityHint">Affects new recordings only, in all modes.</p>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsVideoFormat">Video format</div>
+        <select id="selVideoFormat">
+          <option value="webm" data-i18n="videoFormatWebm">WebM (best compatibility)</option>
+          <option value="mp4" data-i18n="videoFormatMp4">MP4 (falls back to WebM if unsupported)</option>
+        </select>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsScreenshotFormat">Screenshot format</div>
+        <select id="selScreenshotFormat">
+          <option value="png" data-i18n="screenshotFormatPng">PNG (lossless)</option>
+          <option value="webp" data-i18n="screenshotFormatWebp">WebP (smaller file)</option>
+        </select>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsLog">Activity log</div>
+        <p class="hint" data-i18n="activityLogHint">See where your last screenshots and recordings were saved.</p>
+        <button class="action-btn" id="btnOpenLog" data-i18n="openActivityLog">Open save log</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
