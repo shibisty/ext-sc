@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    // Deliberately NOT "force": the two content scripts (select-overlay.ts,
+    // annotate-overlay.ts) and shim.ts must compile to plain classic-script
+    // JS with no top-level import/export — chrome.scripting.executeScript
+    // can only inject classic scripts, and Firefox's manifest also loads
+    // shim.js as one. moduleDetection:"force" treats every file as an ES
+    // module and appends `export {};` to any file lacking real
+    // import/export syntax, which is a SyntaxError in a classic script. The
+    // default ("auto") detects module-ness from each file's actual
+    // import/export statements, which is exactly right here: every page
+    // entry point (background.ts, app.ts, ...) already has real imports, so
+    // it's detected as a module regardless; shim.ts, select-overlay.ts and
+    // annotate-overlay.ts have none, so they compile to plain scripts. The
+    // content scripts avoid colliding with each other or with shim.ts in
+    // the shared global scope by keeping every top-level declaration inside
+    // their own IIFE (see the comment at the top of select-overlay.ts).
+
+    "outDir": "build/ts",
+    "rootDir": "src",
+    "declaration": false,
+    "sourceMap": false,
+    "newLine": "lf",
+
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": false,
+    "useUnknownInCatchVariables": true,
+
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": false,
+
+    "types": []
+  },
+  "include": ["src/**/*.ts"]
+}

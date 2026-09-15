@@ -1,0 +1,227 @@
+<!doctype html>
+<html data-surface="popup">
+<head>
+  <meta charset="utf-8" />
+  <title>ScreenRec Toolkit</title>
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <img src="icons/icon32.png" alt="" />
+        <span data-i18n="appTitle">ScreenRec Toolkit</span>
+      </div>
+      <div class="header-right">
+        <div class="rec-indicator" id="recIndicator" hidden>
+          <span class="rec-dot"></span>
+          <span id="recTime">00:00</span>
+          <button class="rec-goto-btn" id="btnGotoTab" hidden data-i18n-title="goToRecordingTab" title="Go to tab">↗</button>
+        </div>
+        <button class="icon-btn" id="btnOpenSidePanel" data-i18n-title="openSidePanel" title="Open as side panel">▤</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="video" data-i18n="tabVideo">Video</button>
+      <button class="tab-btn" data-tab="screenshot" data-i18n="tabScreenshot">Screenshot</button>
+      <button class="tab-btn" data-tab="settings" data-i18n="tabSettings">Settings</button>
+    </nav>
+
+    <section class="panel active" id="panel-video">
+      <div id="videoModeButtons">
+        <button class="action-btn primary" id="btnRecordArea" data-mode="area">
+          <span class="icon">▦</span>
+          <span data-i18n="videoModeArea">Selected area of this tab</span>
+        </button>
+        <button class="action-btn" id="btnRecordTab" data-mode="tab">
+          <span class="icon">⏺</span>
+          <span data-i18n="videoModeTab">This tab (fast, works in background)</span>
+        </button>
+        <button class="action-btn" id="btnRecordScreen" data-mode="screen">
+          <span class="icon">🖥</span>
+          <span data-i18n="videoModeScreen">Entire screen / another window</span>
+        </button>
+      </div>
+
+      <label class="checkbox-row" id="videoAudioRow">
+        <input type="checkbox" id="chkAudio" checked />
+        <span data-i18n="videoIncludeAudio">Include audio (mic/tab/system)</span>
+      </label>
+
+      <button class="action-btn stop-btn" id="btnStopVideo" hidden>
+        <span class="fill" aria-hidden="true"></span>
+        <span class="icon">⏹</span>
+        <span data-i18n="videoStop">Stop recording</span>
+      </button>
+
+      <p class="hint" id="videoHint" data-i18n="videoHintArea">Draws an area selection, then records only that region.</p>
+    </section>
+
+    <section class="panel" id="panel-screenshot">
+      <button class="action-btn primary" id="btnCaptureArea">
+        <span class="icon">▦</span>
+        <span data-i18n="screenshotArea">Select area & capture</span>
+      </button>
+      <button class="action-btn" id="btnCaptureVisible">
+        <span class="icon">📷</span>
+        <span data-i18n="screenshotVisible">Capture visible area</span>
+      </button>
+      <button class="action-btn" id="btnCaptureFullPage">
+        <span class="icon">📜</span>
+        <span data-i18n="screenshotFullPage">Capture full page (scroll)</span>
+      </button>
+      <p class="hint" data-i18n="screenshotHint">PNG will be saved to your Downloads folder.</p>
+
+      <button class="action-btn subtle" id="btnCopyLastScreenshot" hidden>
+        <span class="icon">📋</span>
+        <span data-i18n="copyLastScreenshot">Copy last screenshot to clipboard</span>
+      </button>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsTheme">Theme</div>
+        <select id="selTheme">
+          <option value="auto" data-i18n="themeAuto">Auto (system)</option>
+          <option value="light" data-i18n="themeLight">Light</option>
+          <option value="dark" data-i18n="themeDark">Dark</option>
+        </select>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsLanguage">Language</div>
+        <select id="selLang">
+          <option value="auto" data-i18n="langAuto">Auto (browser)</option>
+          <option value="en" data-i18n="langEn">English</option>
+          <option value="ru" data-i18n="langRu">Русский</option>
+          <option value="ar" data-i18n="langAr">العربية</option>
+          <option value="am" data-i18n="langAm">አማርኛ</option>
+          <option value="bg" data-i18n="langBg">Български</option>
+          <option value="bn" data-i18n="langBn">বাংলা</option>
+          <option value="ca" data-i18n="langCa">Català</option>
+          <option value="cs" data-i18n="langCs">Čeština</option>
+          <option value="da" data-i18n="langDa">Dansk</option>
+          <option value="de" data-i18n="langDe">Deutsch</option>
+          <option value="el" data-i18n="langEl">Ελληνικά</option>
+          <option value="en_GB" data-i18n="langEnGB">English (UK)</option>
+          <option value="en_US" data-i18n="langEnUS">English (US)</option>
+          <option value="es" data-i18n="langEs">Español</option>
+          <option value="es_419" data-i18n="langEs419">Español (Latinoamérica)</option>
+          <option value="et" data-i18n="langEt">Eesti</option>
+          <option value="fa" data-i18n="langFa">فارسی</option>
+          <option value="fi" data-i18n="langFi">Suomi</option>
+          <option value="fil" data-i18n="langFil">Filipino</option>
+          <option value="fr" data-i18n="langFr">Français</option>
+          <option value="gu" data-i18n="langGu">ગુજરાતી</option>
+          <option value="he" data-i18n="langHe">עברית</option>
+          <option value="hi" data-i18n="langHi">हिन्दी</option>
+          <option value="hr" data-i18n="langHr">Hrvatski</option>
+          <option value="hu" data-i18n="langHu">Magyar</option>
+          <option value="id" data-i18n="langId">Bahasa Indonesia</option>
+          <option value="it" data-i18n="langIt">Italiano</option>
+          <option value="ja" data-i18n="langJa">日本語</option>
+          <option value="kn" data-i18n="langKn">ಕನ್ನಡ</option>
+          <option value="ko" data-i18n="langKo">한국어</option>
+          <option value="lt" data-i18n="langLt">Lietuvių</option>
+          <option value="lv" data-i18n="langLv">Latviešu</option>
+          <option value="ml" data-i18n="langMl">മലയാളം</option>
+          <option value="mr" data-i18n="langMr">मराठी</option>
+          <option value="ms" data-i18n="langMs">Bahasa Melayu</option>
+          <option value="nl" data-i18n="langNl">Nederlands</option>
+          <option value="no" data-i18n="langNo">Norsk</option>
+          <option value="pl" data-i18n="langPl">Polski</option>
+          <option value="pt_BR" data-i18n="langPtBR">Português (Brasil)</option>
+          <option value="pt_PT" data-i18n="langPtPT">Português (Portugal)</option>
+          <option value="ro" data-i18n="langRo">Română</option>
+          <option value="sk" data-i18n="langSk">Slovenčina</option>
+          <option value="sl" data-i18n="langSl">Slovenščina</option>
+          <option value="sr" data-i18n="langSr">Српски</option>
+          <option value="sv" data-i18n="langSv">Svenska</option>
+          <option value="sw" data-i18n="langSw">Kiswahili</option>
+          <option value="ta" data-i18n="langTa">தமிழ்</option>
+          <option value="te" data-i18n="langTe">తెలుగు</option>
+          <option value="th" data-i18n="langTh">ไทย</option>
+          <option value="tr" data-i18n="langTr">Türkçe</option>
+          <option value="uk" data-i18n="langUk">Українська</option>
+          <option value="vi" data-i18n="langVi">Tiếng Việt</option>
+          <option value="zh_CN" data-i18n="langZhCN">中文(简体)</option>
+          <option value="zh_TW" data-i18n="langZhTW">中文(繁體)</option>
+        </select>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsHotkeys">Hotkeys</div>
+        <p class="hint" data-i18n="hotkeysHint">Manage or change shortcuts in your browser's extension settings:</p>
+        <ul class="hotkey-list">
+          <li><span data-i18n="hotkeysToggleRecording">Start/stop recording</span><kbd id="kbdToggle">Ctrl+Shift+R</kbd></li>
+          <li><span data-i18n="hotkeysCaptureFull">Screenshot (visible area)</span><kbd id="kbdFull">Ctrl+Shift+S</kbd></li>
+          <li><span data-i18n="hotkeysCaptureArea">Screenshot (select area)</span><kbd id="kbdArea">Ctrl+Shift+A</kbd></li>
+        </ul>
+        <button class="action-btn" id="btnOpenShortcuts" data-i18n="openShortcutsPage">Open shortcuts settings</button>
+      </div>
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsClipboard">Clipboard</div>
+        <label class="checkbox-row">
+          <input type="checkbox" id="chkAutoClipboard" checked />
+          <span data-i18n="autoClipboardLabel">Automatically copy screenshots to clipboard</span>
+        </label>
+        <p class="hint" data-i18n="autoClipboardHint">When off, use the button below to copy the last screenshot manually.</p>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsVideoQuality">Video quality</div>
+        <select id="selVideoQuality">
+          <option value="auto" data-i18n="videoQualityAuto">Auto (browser default)</option>
+          <option value="low" data-i18n="videoQualityLow">Low (smaller file)</option>
+          <option value="medium" data-i18n="videoQualityMedium">Medium</option>
+          <option value="high" data-i18n="videoQualityHigh">High (larger file)</option>
+        </select>
+        <p class="hint" data-i18n="videoQualityHint">Affects new recordings only, in all modes.</p>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsVideoFormat">Video format</div>
+        <select id="selVideoFormat">
+          <option value="webm" data-i18n="videoFormatWebm">WebM (best compatibility)</option>
+          <option value="mp4" data-i18n="videoFormatMp4">MP4 (falls back to WebM if unsupported)</option>
+        </select>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsScreenshotFormat">Screenshot format</div>
+        <select id="selScreenshotFormat">
+          <option value="png" data-i18n="screenshotFormatPng">PNG (lossless)</option>
+          <option value="webp" data-i18n="screenshotFormatWebp">WebP (smaller file)</option>
+        </select>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsDrawTool">Draw/GIF tool</div>
+        <label class="checkbox-row">
+          <input type="checkbox" id="chkScreenshotDrawTool" checked />
+          <span data-i18n="screenshotDrawToolLabel">Show it before saving a screenshot</span>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="chkVideoDrawTool" checked />
+          <span data-i18n="videoDrawToolLabel">Show it during video recording</span>
+        </label>
+        <p class="hint" data-i18n="drawToolHint">When off, screenshots/recordings start and save immediately, with no drawing step.</p>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label" data-i18n="settingsLog">Activity log</div>
+        <p class="hint" data-i18n="activityLogHint">See where your last screenshots and recordings were saved.</p>
+        <button class="action-btn" id="btnOpenLog" data-i18n="openActivityLog">Open save log</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Must load before app.js: on Firefox, aliases chrome -> browser so
+       app.js's chrome.* calls (runtime, storage, commands, sidebarAction...)
+       work there too. No-op on Chrome. -->
+  <script type="module" src="shim.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

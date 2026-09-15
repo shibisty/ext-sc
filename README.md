@@ -1,6 +1,42 @@
 # ScreenRec Toolkit — расширение для записи видео и скриншотов
 
-## Новое в этой версии (18-й раунд правок)
+## Новое в этой версии (19-й раунд правок — TypeScript, тесты, сборка)
+
+- **Исправлен баг с библиотекой GIF**: попадали не все файлы из папки
+  `gif-library/` — `gif-library/manifest.json` раньше правился вручную и
+  постепенно расходился с реальным содержимым папки. Теперь этот манифест
+  **генерируется автоматически при сборке** сканированием фактической папки
+  (`scripts/gen-gif-manifest.mjs`), так что расхождение больше физически
+  невозможно. Покрыто тестом, который воспроизводит именно этот баг
+  (файл есть в папке, но отсутствует в «устаревшем» ручном манифесте) и
+  проверяет, что генератор всё равно его подхватывает.
+- **Весь код переведён на TypeScript** (`src/**/*.ts`) — без бандлера:
+  `tsc` компилирует каждый файл 1:1. Общая логика/типы (`background`, попап
+  и боковая панель, `offscreen`, запасное окно записи Firefox, страницы
+  сохранения и журнала) грузятся как настоящие ES-модули
+  (`<script type="module">`), а два внедряемых content-script'а
+  (`select-overlay.ts`, `annotate-overlay.ts`) и `shim.ts` остаются
+  «классическими» скриптами без `import`/`export` — это единственный формат,
+  который `chrome.scripting.executeScript` умеет внедрять. Подробности и
+  почему именно так — в `ARCHITECTURE.md`.
+- **Устранено дублирование кода**, обнаруженное при разборе архитектуры:
+  логика IndexedDB-хранилища блобов (была скопирована в 4 файла), выбора
+  формата/битрейта видео, генерации имени файла, списка «служебных» URL и
+  сортировки GIF по частоте использования — вынесены в `src/lib/*.ts`,
+  каждый модуль с собственными юнит-тестами.
+- **Добавлены тесты** (`npm test`, встроенный тестраннер Node.js — без
+  внешних зависимостей) для всего `src/lib/` и генератора GIF-манифеста.
+- **Новый пайплайн сборки** (`npm run build` → `scripts/build.mjs`):
+  компиляция TypeScript → копирование статики → генерация
+  `gif-library/manifest.json` → выбор манифеста под браузер → упаковка в
+  `dist/chrome/`, `dist/firefox/` и соответствующие `.zip`. `build.sh` /
+  `build.bat` — тонкие обёртки над тем же скриптом.
+- См. `ARCHITECTURE.md` — разбор компонентов, схема обмена сообщениями и
+  обоснование всех решений выше.
+
+---
+
+## Новое в предыдущей версии (18-й раунд правок)
 
 - **Кнопки Сохранить/Отмена (или другие элементы внизу панели) могли
   уезжать за нижний край экрана**: панель позиционировалась по `top` от
@@ -503,20 +539,41 @@
   через иконку расширения → «Open side panel».
 - **Темы**: светлая/тёмная/авто. **Языки**: RU/EN/авто.
 
+## Сборка
+
+```sh
+npm install     # ставит typescript (единственная зависимость)
+npm run build   # tsc → dist/chrome/ и dist/firefox/ + .zip обеих версий
+```
+
+(на Windows — `build.bat`, на macOS/Linux — `build.sh`; оба просто вызывают
+`node scripts/build.mjs`.)
+
+Другие полезные команды:
+
+```sh
+npm run typecheck   # tsc --noEmit
+npm test            # тесты (сначала компилирует src/lib через tsc)
+npm run gen-gif-manifest   # пересобрать gif-library/manifest.json вручную
+```
+
 ## Установка (режим разработчика / unpacked)
+
+Сначала выполните `npm install && npm run build` (см. выше) — установка
+идёт из папки `dist/chrome/` или `dist/firefox/`, а не из исходников.
 
 ### Chrome / Edge / Brave
 1. `chrome://extensions` → включить **«Режим разработчика»**.
-2. **«Загрузить распакованное расширение»** → выбрать папку `ext/`.
+2. **«Загрузить распакованное расширение»** → выбрать папку `dist/chrome/`.
 
 ### Firefox
-1. `mv manifest.firefox.json manifest.json` (заменить манифест).
-2. `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on…** →
-   выбрать `manifest.json` в папке.
-3. Firefox не поддерживает `chrome.offscreen`/`chrome.tabCapture`, поэтому
+1. `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on…** →
+   выбрать `manifest.json` внутри папки `dist/firefox/`.
+2. Firefox не поддерживает `chrome.offscreen`/`chrome.tabCapture`, поэтому
    там все режимы записи автоматически используют запасной вариант —
    отдельное окно записи с системным диалогом выбора экрана (как раньше).
-   Постоянная установка требует подписи через AMO.
+   Постоянная установка требует подписи через AMO — для этого используйте
+   `dist/screenrec-toolkit-firefox.zip`.
 
 ## Как этим пользоваться
 
@@ -535,24 +592,44 @@
 
 ## Структура проекта
 
+Исходники — TypeScript (`src/`), сборка кладёт готовые расширения в `dist/`.
+Подробный разбор — в `ARCHITECTURE.md`.
+
 ```
 manifest.json                — манифест Chrome (MV3)
 manifest.firefox.json        — манифест Firefox (MV3, sidebar_action)
-background.js                — service worker: хоткеи, скриншоты, оркестрация записи
-offscreen.js / offscreen.html — фоновый движок записи (переживает закрытие попапа)
-select-overlay.js            — оверлей выделения области (внедряется по требованию)
-annotate-overlay.js          — панель рисования/текста поверх записываемой области
-recorder.html / recorder.js  — запасное окно записи (Firefox / нет offscreen API)
-popup.html                   — попап расширения (фикс. ширина)
-sidepanel.html / sidepanel.css — боковая панель (адаптивная ширина)
-app.js / app.css             — общая логика и стили попапа и боковой панели
-i18n.js                      — словарь переводов и хранилище настроек
-theme.css                    — переменные светлой/тёмной темы
-log.html / log.js            — страница журнала сохранений (последние 10)
-save-helper.html / save-helper.js — скрытая страница сохранения видео (обходит ограничения SW/offscreen)
-gif-library/                 — встроенная библиотека GIF/webp + manifest.json со списком файлов
-_locales/en, _locales/ru     — локализация системных строк (имя, описание, команды)
-icons/                       — иконки расширения
+
+src/
+  background.ts               — service worker: хоткеи, скриншоты, оркестрация записи
+  offscreen.ts                — фоновый движок записи (переживает закрытие попапа)
+  select-overlay.ts           — оверлей выделения области (content script, без import/export)
+  annotate-overlay.ts         — панель рисования/текста поверх записываемой области (то же)
+  recorder.ts                 — запасное окно записи (Firefox / нет offscreen API)
+  app.ts                      — общая логика попапа и боковой панели
+  i18n.ts                     — словарь переводов и хранилище настроек
+  log.ts                      — страница журнала сохранений (последние 10)
+  save-helper.ts              — скрытая страница сохранения видео (обходит ограничения SW/offscreen)
+  shim.ts                     — chrome = browser (кросс-браузерная совместимость)
+  types/chrome.d.ts           — типы использованных chrome.* API (без @types/chrome)
+  lib/                        — общая логика, вынесенная из дублей + юнит-тесты
+    blob-db.ts, video-format.ts, timestamp.ts, restricted-url.ts, rect.ts, gif-usage.ts
+
+public/                       — статика, копируется в dist/ как есть
+  popup.html, sidepanel.html, offscreen.html, recorder.html,
+  save-helper.html, log.html, app.css, sidepanel.css, theme.css
+  gif-library/                — GIF/webp-картинки (manifest.json НЕ хранится — генерируется при сборке)
+  _locales/en, _locales/ru    — локализация системных строк (имя, описание, команды)
+  icons/                      — иконки расширения
+
+scripts/
+  build.mjs                   — tsc → копирование статики → gif-manifest → манифест под браузер → zip
+  gen-gif-manifest.mjs        — сканирует gif-library/ и генерирует manifest.json
+
+tests/                        — node:test, юнит-тесты для src/lib и gen-gif-manifest.mjs
+
+dist/                         — результат сборки (в git не хранится)
+  chrome/, firefox/           — распакованные версии, готовые к загрузке в браузер
+  screenrec-toolkit-chrome.zip, screenrec-toolkit-firefox.zip
 ```
 
 ## Известные ограничения

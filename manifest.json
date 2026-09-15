@@ -27,8 +27,12 @@
   "side_panel": {
     "default_path": "sidepanel.html"
   },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; object-src 'self';"
+  },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "popup.html",
@@ -64,7 +68,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["recorder.html", "select-overlay.js", "annotate-overlay.js", "gif-library/*"],
+      "resources": ["recorder.html", "select-overlay.js", "annotate-overlay.js", "frame-stitch-recorder.js", "gif-library/*"],
       "matches": ["<all_urls>"]
     }
   ]

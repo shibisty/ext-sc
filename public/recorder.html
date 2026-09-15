@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>ScreenRec Toolkit</title>
+  <link rel="stylesheet" href="theme.css" />
+  <style>
+    body { width: 380px; min-height: 260px; margin: 0; }
+    .wrap { padding: 18px; display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center; }
+    .dot {
+      width: 14px; height: 14px; border-radius: 50%; background: #e04343;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .row { display: flex; align-items: center; gap: 10px; }
+    .time { font-size: 28px; font-variant-numeric: tabular-nums; font-weight: 600; }
+    .status { font-size: 13px; opacity: .75; }
+    /* A separate, deliberately loud warning box for area mode (see i18n.ts's
+       recorderAreaShareWarning comment): the existing .status text already
+       said "choose This Tab" but at 13px/75% opacity it was easy to skim
+       past, and people kept picking the wrong option in the browser's own
+       share dialog as a result. */
+    .area-warn {
+      display: none; font-size: 12.5px; font-weight: 600; line-height: 1.4;
+      text-align: start; background: #4a3200; color: #ffd166;
+      border: 1px solid #806000; border-radius: 10px; padding: 10px 12px;
+    }
+    .area-warn.visible { display: block; }
+    /* "No sound" reports kept needing a DevTools console log to diagnose
+       (probeAudioLevel()), but the console's own early lines turned out to
+       be missing from what the person could actually copy — a DevTools
+       buffering/Persist Logs quirk, not anything this codebase controls.
+       This shows the same verdict directly in this window's own UI
+       instead, which is already open and visible for the whole recording —
+       no console needed. Two color variants (ok/silent) so the verdict
+       itself is legible without reading the text closely. */
+    .audio-check {
+      display: none; font-size: 12.5px; font-weight: 600; line-height: 1.4;
+      text-align: start; border-radius: 10px; padding: 10px 12px;
+    }
+    .audio-check.visible { display: block; }
+    .audio-check.ok { background: #1f4a2e; color: #7fe0a0; border: 1px solid #2f7a4a; }
+    .audio-check.silent { background: #4a1f1f; color: #ff9d9d; border: 1px solid #7a3030; }
+    video.preview {
+      width: 100%; max-height: 140px; border-radius: 10px; background: #000;
+      object-fit: contain; display: none;
+    }
+    .btns { display: flex; gap: 10px; width: 100%; }
+    button {
+      flex: 1; padding: 10px 14px; border-radius: 10px; border: none;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .btn-primary { background: #e04343; color: #fff; }
+    .btn-secondary { background: var(--btn-secondary-bg); color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="row"><div class="dot" id="dot"></div><div class="time" id="time">00:00</div></div>
+    <div class="status" id="status" data-i18n="recorderPreparing">Preparing capture…</div>
+    <div class="area-warn" id="areaWarn" data-i18n="recorderAreaShareWarning"></div>
+    <!-- Separate from #audioCheck below: that one reports on the FINAL,
+         already-mixed audio track's signal level (mic + tab audio
+         combined), which can't tell "tab audio was granted but silent"
+         apart from "tab audio was never granted at all" — a distinction
+         people recording system/tab audio specifically needed to see.
+         This one shows, immediately and independently, whether the
+         browser's own share dialog handed over a tab/system audio track
+         in the first place (a fact known the instant getDisplayMedia()
+         returns, no sampling needed). -->
+    <div class="audio-check" id="tabAudioCheck"></div>
+    <div class="audio-check" id="audioCheck"></div>
+    <video class="preview" id="preview" muted playsinline></video>
+    <!-- getDisplayMedia() must be called as the direct result of a real
+         click IN THIS DOCUMENT — this window was opened programmatically
+         via chrome.windows.create() from the background script, which
+         carries no "user activation" of its own into the new document, so
+         calling getDisplayMedia() automatically on load was silently
+         denied by the browser (see ARCHITECTURE.md). This button is that
+         required click. -->
+    <button class="btn-primary" id="startBtn" data-i18n="recorderStartBtn" style="width:100%;">Start sharing</button>
+    <div class="btns">
+      <button class="btn-secondary" id="cancelBtn" data-i18n="recorderCancelBtn">Cancel</button>
+      <button class="btn-primary" id="stopBtn" data-i18n="recorderStopBtn" disabled hidden>Stop &amp; Save</button>
+    </div>
+  </div>
+  <!-- Must load before recorder.js: this is Firefox's own recording-window
+       fallback (no chrome.offscreen/chrome.tabCapture there), so the
+       chrome -> browser alias matters most here. No-op on Chrome. -->
+  <script type="module" src="shim.js"></script>
+  <script type="module" src="recorder.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "screenrec-toolkit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ScreenRec Toolkit — screenshot & screen recording browser extension (Chrome + Firefox).",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build:ts": "tsc -p tsconfig.json",
+    "gen-gif-manifest": "node scripts/gen-gif-manifest.mjs public/gif-library",
+    "pretest": "npm run build:ts",
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "build": "node scripts/build.mjs",
+    "prebuild": "npm run typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.0"
+  },
+  "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
+    "@ffmpeg/core": "^0.12.6"
+  }
+}
