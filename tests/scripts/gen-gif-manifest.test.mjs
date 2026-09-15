@@ -9,12 +9,12 @@ test("isImageFile accepts the extensions the GIF library actually ships", () => 
   assert.equal(isImageFile("04_giphy.webp"), true);
   assert.equal(isImageFile("17_80h.gif"), true);
   assert.equal(isImageFile("cover.PNG"), true); // case-insensitive
-  assert.equal(isImageFile("manifest.json"), false);
+  assert.equal(isImageFile("index.json"), false);
   assert.equal(isImageFile(".DS_Store"), false);
 });
 
 test("buildManifest filters non-images and sorts the result", () => {
-  const manifest = buildManifest(["b.gif", "manifest.json", "a.webp", "c.gif"]);
+  const manifest = buildManifest(["b.gif", "index.json", "a.webp", "c.gif"]);
   assert.deepEqual(manifest, { files: ["a.webp", "b.gif", "c.gif"] });
 });
 
@@ -30,8 +30,8 @@ test("scanGifLibrary reflects the real directory contents, including files a sta
   const dir = await mkdtemp(join(tmpdir(), "gif-library-"));
   try {
     await writeFile(join(dir, "old.gif"), "");
-    await writeFile(join(dir, "manifest.json"), JSON.stringify({ files: ["old.gif"] }));
-    // A file added to the folder without anyone updating manifest.json —
+    await writeFile(join(dir, "index.json"), JSON.stringify({ files: ["old.gif"] }));
+    // A file added to the folder without anyone updating index.json —
     // exactly the scenario the user reported ("не все гиф... берутся").
     await writeFile(join(dir, "new.webp"), "");
 

@@ -4,8 +4,6 @@ A Chrome and Firefox extension for screen recording and screenshots, with a
 built-in annotation editor, a side panel, hotkeys, light/dark themes, and
 English/Russian localization.
 
-[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/cw/shibisty)
-
 ## Features
 
 **Screenshots**
@@ -97,7 +95,7 @@ Other useful commands:
 ```sh
 npm run typecheck          # tsc --noEmit
 npm test                   # unit tests (compiles src/lib via tsc first)
-npm run gen-gif-manifest   # regenerate gif-library/manifest.json by hand
+npm run gen-gif-manifest   # regenerate gif-library/index.json by hand
 ```
 
 ## Usage
@@ -144,13 +142,13 @@ src/
 public/                       — static assets, copied into dist/ as-is
   popup.html, sidepanel.html, offscreen.html, recorder.html,
   save-helper.html, log.html, app.css, sidepanel.css, theme.css
-  gif-library/                — GIF/WebP stickers (manifest.json is generated at build time, not hand-edited)
+  gif-library/                — GIF/WebP stickers (index.json is generated at build time, not hand-edited)
   _locales/en, _locales/ru    — localized strings for the extension's own name/description/commands
   icons/                       — extension icons
 
 scripts/
   build.mjs                   — tsc -> copy static assets -> gif manifest -> per-browser manifest -> zip
-  gen-gif-manifest.mjs        — scans gif-library/ and writes manifest.json
+  gen-gif-manifest.mjs        — scans gif-library/ and writes index.json
 
 tests/                        — node:test unit tests for src/lib and gen-gif-manifest.mjs
 
@@ -171,7 +169,3 @@ dist/                         — build output (not committed)
 - Firefox doesn't implement `chrome.offscreen` or `chrome.tabCapture` yet,
   so recording there always goes through the fallback paths described
   above. A permanent install requires AMO signing.
-
-[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/cw/shibisty)
-
-If this project helps you, consider supporting its development on Patreon ❤️

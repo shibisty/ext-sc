@@ -979,7 +979,7 @@
     async function loadGifLibrary() {
       libraryGrid.innerHTML = "";
       try {
-        const manifestUrl = chrome.runtime.getURL("gif-library/manifest.json");
+        const manifestUrl = chrome.runtime.getURL("gif-library/index.json");
         const manifest = await fetch(manifestUrl).then((r) => r.json());
         const files: string[] = Array.isArray(manifest.files) ? manifest.files : [];
         if (files.length === 0) {

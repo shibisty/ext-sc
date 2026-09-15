@@ -7,20 +7,24 @@
 //      why some of those compile as classic scripts and others as ES
 //      modules).
 //   2. Copy public/ (HTML/CSS/icons/_locales/gif images — everything except
-//      gif-library/manifest.json, which step 4 generates instead of
+//      gif-library/index.json, which step 4 generates instead of
 //      copying) into dist/chrome and dist/firefox.
 //   3. Copy build/ts/*.js (including lib/) into both dist folders.
-//   4. Generate gif-library/manifest.json by scanning the actual
+//   4. Generate gif-library/index.json by scanning the actual
 //      public/gif-library folder — this is the fix for the "not all GIFs
 //      get picked up" bug: the manifest can no longer go stale, because it
-//      is never hand-edited.
+//      is never hand-edited. (Named index.json, not manifest.json, because
+//      the Chrome Web Store's own upload validator scans the whole archive
+//      for any file literally named "manifest.json" and rejects the
+//      package if it finds more than one — see ARCHITECTURE.md.)
 //   5. Copy manifest.json -> dist/chrome/manifest.json and
 //      manifest.firefox.json -> dist/firefox/manifest.json, plus LICENSE.
 //   6. Zip each dist/<browser> folder.
 
 import { execFileSync } from "node:child_process";
-import { cp, mkdir, rm, readdir, stat } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { cp, mkdir, rm, stat } from "node:fs/promises";
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { deflateRawSync } from "node:zlib";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { scanGifLibrary } from "./gen-gif-manifest.mjs";
@@ -50,17 +54,17 @@ async function run() {
     log(`[${browser}] copying compiled JS from build/ts/...`);
     await cp(path.join(ROOT, "build", "ts"), outDir, { recursive: true });
 
-    log(`[${browser}] generating gif-library/manifest.json...`);
+    log(`[${browser}] generating gif-library/index.json...`);
     const manifest = await scanGifLibrary(path.join(outDir, "gif-library"));
     const { writeFile } = await import("node:fs/promises");
     await writeFile(
-      path.join(outDir, "gif-library", "manifest.json"),
+      path.join(outDir, "gif-library", "index.json"),
       JSON.stringify(manifest, null, 2) + "\n",
       "utf8"
     );
-    log(`[${browser}] gif-library/manifest.json: ${manifest.files.length} file(s)`);
+    log(`[${browser}] gif-library/index.json: ${manifest.files.length} file(s)`);
 
-    log(`[${browser}] vendoring @ffmpeg/* (post-record area-mode crop, Firefox — see ARCHITECTURE.md Round 32)...`);
+    log(`[${browser}] vendoring @ffmpeg/* (post-record area-mode crop, Firefox — see ARCHITECTURE.md)...`);
     await vendorFfmpeg(outDir);
 
     const manifestSrc = browser === "firefox" ? "manifest.firefox.json" : "manifest.json";
@@ -87,16 +91,16 @@ async function run() {
 // <outDir>/ffmpeg-vendor/, as PLAIN STATIC FILES (not bundled) — this
 // project has no bundler (tsc only), and recorder.ts loads these via a
 // dynamic import() of a chrome.runtime.getURL() string (untyped, so tsc
-// never needs to resolve the actual package's module graph — see Round 32
-// in ARCHITECTURE.md for why). @ffmpeg/ffmpeg and @ffmpeg/util ship their
+// never needs to resolve the actual package's module graph — see
+// ARCHITECTURE.md for why). @ffmpeg/ffmpeg and @ffmpeg/util ship their
 // own self-contained ESM builds under dist/esm/ (only relative imports
 // between their own files, verified against the versions pinned in
 // package.json — if a future version restructures this, the copy below
 // will fail loudly with ENOENT rather than silently shipping a stale/empty
 // vendor folder).
 //
-// @ffmpeg/core MUST also come from dist/esm/, not dist/umd/ — see Round 38
-// in ARCHITECTURE.md. Because we vendor @ffmpeg/ffmpeg's dist/esm build,
+// @ffmpeg/core MUST also come from dist/esm/, not dist/umd/ — see
+// ARCHITECTURE.md. Because we vendor @ffmpeg/ffmpeg's dist/esm build,
 // FFmpeg.load() spins up its worker as `new Worker(url, {type:"module"})`.
 // Inside a MODULE worker, Firefox has no importScripts() at all, so that
 // worker's own worker.js falls back to `await import(coreURL)` to load
@@ -135,17 +139,141 @@ async function vendorFfmpeg(outDir) {
 
 // Zips the CONTENTS of dir (not the dir itself) into zipPath, so the
 // manifest.json ends up at the zip's root — required for both the Chrome
-// Web Store and AMO. Uses the system `zip` on POSIX and PowerShell's
-// Compress-Archive on Windows, matching build.sh/build.bat.
+// Web Store and AMO.
+//
+// This used to shell out to the system `zip` on POSIX and to PowerShell's
+// Compress-Archive on Windows. The Windows path turned out to write every
+// entry's path with a backslash ("\") separator instead of the forward
+// slash the ZIP spec (APPNOTE.TXT §4.4.17.1) requires — invisible in
+// Windows Explorer, which normalizes it on read, but fatal for AMO's
+// addons-linter, which rejects the whole upload with "Invalid file name
+// in archive: <path>\<file>" (always something under ffmpeg-vendor/ here,
+// the only vendored subtree with nested folders). Switching that branch
+// to call .NET's ZipFile.CreateFromDirectory directly (instead of the
+// Compress-Archive cmdlet, which is a separate, buggy implementation)
+// should have fixed it, since that API is documented to normalize
+// separators — but the same upload failed again afterwards with the
+// exact same error, and this container has no Windows/PowerShell to
+// reproduce or debug that discrepancy on. Rather than guess at a second
+// PowerShell incantation and hope, this now writes the ZIP file itself in
+// plain Node — the exact same code path on every platform, no shelling
+// out to any OS-specific zip tool at all, and something this container
+// CAN actually build and verify end-to-end — see ARCHITECTURE.md for the
+// full reasoning and how it was verified without Windows available.
 async function zipDir(dir, zipPath) {
   await rm(zipPath, { force: true });
-  if (process.platform === "win32") {
-    const psCommand = `Compress-Archive -Path '${dir}\\*' -DestinationPath '${zipPath}' -Force`;
-    execFileSync("powershell", ["-NoProfile", "-Command", psCommand], { stdio: "inherit" });
-    return;
+
+  const files = [];
+  (function walk(current) {
+    for (const entry of readdirSync(current, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      const full = path.join(current, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.isFile()) files.push(full);
+    }
+  })(dir);
+
+  const localChunks = [];
+  const centralChunks = [];
+  let offset = 0;
+  let entryCount = 0;
+
+  for (const filePath of files) {
+    // Entry names must always use "/", regardless of the OS this build
+    // runs on (path.sep is "\" on Windows) — this is the one detail the
+    // old PowerShell path got wrong.
+    const entryName = path.relative(dir, filePath).split(path.sep).join("/");
+    const data = readFileSync(filePath);
+    const { time: dosTime, date: dosDate } = toDosDateTime(statSync(filePath).mtime);
+    const crc = crc32(data);
+    const compressed = deflateRawSync(data);
+    // Only use the compressed bytes if they're actually smaller — small
+    // or already-compressed files (e.g. .wasm, .webp) can come out larger
+    // under deflate, and storing them uncompressed is both valid and
+    // simpler than falling back mid-write.
+    const useStore = compressed.length >= data.length;
+    const method = useStore ? 0 : 8; // 0 = stored, 8 = deflate
+    const payload = useStore ? data : compressed;
+    const nameBuf = Buffer.from(entryName, "utf8");
+
+    const localHeader = Buffer.alloc(30);
+    localHeader.writeUInt32LE(0x04034b50, 0); // local file header signature
+    localHeader.writeUInt16LE(20, 4); // version needed to extract
+    localHeader.writeUInt16LE(0x0800, 6); // general purpose flag: UTF-8 name
+    localHeader.writeUInt16LE(method, 8);
+    localHeader.writeUInt16LE(dosTime, 10);
+    localHeader.writeUInt16LE(dosDate, 12);
+    localHeader.writeUInt32LE(crc, 14);
+    localHeader.writeUInt32LE(payload.length, 18);
+    localHeader.writeUInt32LE(data.length, 22);
+    localHeader.writeUInt16LE(nameBuf.length, 26);
+    localHeader.writeUInt16LE(0, 28); // extra field length
+    localChunks.push(localHeader, nameBuf, payload);
+
+    const centralHeader = Buffer.alloc(46);
+    centralHeader.writeUInt32LE(0x02014b50, 0); // central file header signature
+    centralHeader.writeUInt16LE(20, 4); // version made by
+    centralHeader.writeUInt16LE(20, 6); // version needed to extract
+    centralHeader.writeUInt16LE(0x0800, 8); // general purpose flag: UTF-8 name
+    centralHeader.writeUInt16LE(method, 10);
+    centralHeader.writeUInt16LE(dosTime, 12);
+    centralHeader.writeUInt16LE(dosDate, 14);
+    centralHeader.writeUInt32LE(crc, 16);
+    centralHeader.writeUInt32LE(payload.length, 20);
+    centralHeader.writeUInt32LE(data.length, 24);
+    centralHeader.writeUInt16LE(nameBuf.length, 28);
+    centralHeader.writeUInt16LE(0, 30); // extra field length
+    centralHeader.writeUInt16LE(0, 32); // file comment length
+    centralHeader.writeUInt16LE(0, 34); // disk number start
+    centralHeader.writeUInt16LE(0, 36); // internal file attributes
+    centralHeader.writeUInt32LE(0, 38); // external file attributes
+    centralHeader.writeUInt32LE(offset, 42); // relative offset of local header
+    centralChunks.push(centralHeader, nameBuf);
+
+    offset += localHeader.length + nameBuf.length + payload.length;
+    entryCount++;
   }
-  const entries = await readdir(dir);
-  execFileSync("zip", ["-r", "-X", zipPath, ...entries], { cwd: dir, stdio: "inherit" });
+
+  const centralDirStart = offset;
+  const centralDirBuf = Buffer.concat(centralChunks);
+
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0); // end of central directory signature
+  eocd.writeUInt16LE(0, 4); // number of this disk
+  eocd.writeUInt16LE(0, 6); // disk with start of central directory
+  eocd.writeUInt16LE(entryCount, 8); // entries on this disk
+  eocd.writeUInt16LE(entryCount, 10); // total entries
+  eocd.writeUInt32LE(centralDirBuf.length, 12); // size of central directory
+  eocd.writeUInt32LE(centralDirStart, 16); // offset of start of central directory
+  eocd.writeUInt16LE(0, 20); // comment length
+
+  writeFileSync(zipPath, Buffer.concat([...localChunks, centralDirBuf, eocd]));
+}
+
+function toDosDateTime(date) {
+  const time =
+    ((date.getHours() & 0x1f) << 11) | ((date.getMinutes() & 0x3f) << 5) | ((date.getSeconds() >> 1) & 0x1f);
+  const dosYear = Math.max(0, date.getFullYear() - 1980) & 0x7f;
+  const dosDate = (dosYear << 9) | (((date.getMonth() + 1) & 0xf) << 5) | (date.getDate() & 0x1f);
+  return { time, date: dosDate };
+}
+
+// Standard CRC-32 (the polynomial ZIP itself uses) — computed by hand
+// instead of pulling in a dependency, since it's ~15 lines and this
+// project otherwise has none.
+const CRC_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    table[n] = c >>> 0;
+  }
+  return table;
+})();
+
+function crc32(buf) {
+  let crc = 0xffffffff;
+  for (let i = 0; i < buf.length; i++) crc = CRC_TABLE[(crc ^ buf[i]) & 0xff] ^ (crc >>> 8);
+  return (crc ^ 0xffffffff) >>> 0;
 }
 
 // Sanity check used only to give a clearer error than tsc's own if src/
