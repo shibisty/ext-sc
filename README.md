@@ -4,6 +4,8 @@ A Chrome and Firefox extension for screen recording and screenshots, with a
 built-in annotation editor, a side panel, hotkeys, light/dark themes, and
 English/Russian localization.
 
+[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/cw/shibisty)
+
 ## Features
 
 **Screenshots**
@@ -169,3 +171,7 @@ dist/                         — build output (not committed)
 - Firefox doesn't implement `chrome.offscreen` or `chrome.tabCapture` yet,
   so recording there always goes through the fallback paths described
   above. A permanent install requires AMO signing.
+
+[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/cw/shibisty)
+
+If this project helps you, consider supporting its development on Patreon ❤️
