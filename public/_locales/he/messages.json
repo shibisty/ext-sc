@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — וידאו וצילום מסך"
+  },
+  "extDescription": {
+    "message": "הקליטו וידאו עם קול וצלמו צילומי מסך, עם בחירת אזור וקיצורי מקלדת."
+  },
+  "cmdToggleRecording": {
+    "message": "התחל/עצור הקלטת וידאו"
+  },
+  "cmdCaptureFull": {
+    "message": "צלם צילום מסך (אזור גלוי)"
+  },
+  "cmdCaptureArea": {
+    "message": "צלם צילום מסך (בחר אזור)"
+  }
+}

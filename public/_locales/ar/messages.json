@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — فيديو ولقطة شاشة"
+  },
+  "extDescription": {
+    "message": "سجّل فيديو مع صوت والتقط لقطات شاشة، مع تحديد المنطقة واختصارات لوحة المفاتيح."
+  },
+  "cmdToggleRecording": {
+    "message": "بدء/إيقاف تسجيل الفيديو"
+  },
+  "cmdCaptureFull": {
+    "message": "التقاط لقطة شاشة (المنطقة المرئية)"
+  },
+  "cmdCaptureArea": {
+    "message": "التقاط لقطة شاشة (تحديد المنطقة)"
+  }
+}

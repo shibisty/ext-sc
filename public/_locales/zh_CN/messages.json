@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — 视频与截图"
+  },
+  "extDescription": {
+    "message": "录制带声音的视频并截图，支持区域选择和快捷键。"
+  },
+  "cmdToggleRecording": {
+    "message": "开始/停止录制视频"
+  },
+  "cmdCaptureFull": {
+    "message": "截图（可见区域）"
+  },
+  "cmdCaptureArea": {
+    "message": "截图（选择区域）"
+  }
+}

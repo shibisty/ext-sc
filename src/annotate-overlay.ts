@@ -52,6 +52,7 @@
       pen: "Brush",
       text: "Text",
       select: "Select / Move / Resize",
+      cursor: "Cursor mode (click through to use the page)",
       clear: "Clear all",
       undo: "Undo",
       hide: "Hide toolbar",
@@ -88,6 +89,7 @@
       pen: "Кисть",
       text: "Текст",
       select: "Выбор / перемещение / размер",
+      cursor: "Режим курсора (клик — работа со страницей)",
       clear: "Очистить всё",
       undo: "Отменить",
       hide: "Скрыть панель",
@@ -201,7 +203,12 @@
       });
     }
 
-    let tool: "pen" | "text" | "select" = "pen";
+    let tool: "pen" | "text" | "select" | "cursor" = "pen";
+    // The real tool to go back to when leaving cursor mode — kept in sync
+    // by setActiveTool() any time it's called with a non-cursor tool, so
+    // both exits (re-clicking the cursor button, or clicking a tool button
+    // directly while in cursor mode) restore the right thing for free.
+    let toolBeforeCursor: "pen" | "text" | "select" = "pen";
     let color: string = saved.color || PALETTE[0];
     let brushSize: number = saved.brushSize ?? 6;
     let brushOpacity: number = saved.brushOpacity ?? 1;
@@ -445,6 +452,12 @@
     const penBtn = toolBtn("🖌", STR.pen);
     const textBtn = toolBtn("T", STR.text);
     const selectBtn = toolBtn("⇱", STR.select);
+    // Cursor mode: makes the canvas click-through (pointer-events: none) so
+    // the person can interact with the underlying page — click links, type
+    // into a form — without leaving the annotation editor. Re-clicking it,
+    // or clicking any other tool button directly, resumes drawing; see
+    // setActiveTool() for the toggle logic.
+    const cursorBtn = toolBtn("🖱", STR.cursor);
     const libraryBtn = toolBtn("📚", STR.gifLibrary);
     const undoBtn = toolBtn("↩", STR.undo);
     const clearBtn = toolBtn("🗑", STR.clear);
@@ -456,7 +469,9 @@
     const hideBtn = toolBtn("×", STR.hide);
     hideBtn.style.background = "rgba(224,67,67,0.25)";
     hideBtn.style.marginLeft = "auto";
-    [penBtn, textBtn, selectBtn, libraryBtn, colorInput, undoBtn, clearBtn, hideBtn].forEach((el) => toolRow.appendChild(el));
+    [penBtn, textBtn, selectBtn, cursorBtn, libraryBtn, colorInput, undoBtn, clearBtn, hideBtn].forEach((el) =>
+      toolRow.appendChild(el)
+    );
     toolbar.appendChild(toolRow);
 
     function sliderRow(labelText: string, min: number, max: number, step: number, value: number) {
@@ -612,12 +627,22 @@
       toolbar.appendChild(stopRecordingBtn);
     }
 
-    function setActiveTool(t: "pen" | "text" | "select") {
+    function setActiveTool(t: "pen" | "text" | "select" | "cursor") {
+      // Remember the last real tool so leaving cursor mode (either by
+      // re-clicking cursorBtn, or by clicking a tool button directly while
+      // in cursor mode) restores it. Only updated for real tools, so it's
+      // never overwritten by "cursor" itself.
+      if (t !== "cursor") toolBeforeCursor = t;
       tool = t;
       penBtn.style.outline = t === "pen" ? "2px solid #7c5cff" : "none";
       textBtn.style.outline = t === "text" ? "2px solid #7c5cff" : "none";
       selectBtn.style.outline = t === "select" ? "2px solid #7c5cff" : "none";
+      cursorBtn.style.outline = t === "cursor" ? "2px solid #7c5cff" : "none";
       canvas.style.cursor = t === "text" ? "text" : t === "select" ? "default" : "crosshair";
+      // Cursor mode makes the canvas click-through so clicks/typing reach
+      // the page underneath instead of the drawing overlay; every other
+      // tool keeps it capturing input as before.
+      canvas.style.pointerEvents = t === "cursor" ? "none" : "auto";
       brushPanel.style.display = t === "pen" ? "flex" : "none";
       textPanel.style.display = t === "text" ? "flex" : "none";
       if (t !== "select") {
@@ -1716,6 +1741,12 @@
     penBtn.addEventListener("click", () => setActiveTool("pen"));
     textBtn.addEventListener("click", () => setActiveTool("text"));
     selectBtn.addEventListener("click", () => setActiveTool("select"));
+    // Toggle: click to enter cursor mode, click again to return to whichever
+    // real tool was active before. Clicking penBtn/textBtn/selectBtn
+    // directly while in cursor mode already works with no extra code —
+    // those handlers call setActiveTool() with a real tool, which both
+    // exits cursor mode and updates toolBeforeCursor as a side effect.
+    cursorBtn.addEventListener("click", () => setActiveTool(tool === "cursor" ? toolBeforeCursor : "cursor"));
     colorInput.addEventListener("input", (e) => {
       color = (e.target as HTMLInputElement).value;
       persistToolSettings();
@@ -1746,7 +1777,7 @@
         else el.style.display = toolbarVisible ? "flex" : "none";
       });
       libraryPanel.style.display = toolbarVisible && libraryOpen ? "flex" : "none";
-      [penBtn, textBtn, selectBtn, libraryBtn, colorInput, undoBtn, clearBtn].forEach((el) => {
+      [penBtn, textBtn, selectBtn, cursorBtn, libraryBtn, colorInput, undoBtn, clearBtn].forEach((el) => {
         el.style.display = toolbarVisible ? "flex" : "none";
       });
       pasteHint.style.display = toolbarVisible ? "block" : "none";

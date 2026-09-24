@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — 動画とスクリーンショット"
+  },
+  "extDescription": {
+    "message": "音声付きの動画を録画し、範囲選択とショートカットキーでスクリーンショットを撮影します。"
+  },
+  "cmdToggleRecording": {
+    "message": "動画の録画を開始/停止"
+  },
+  "cmdCaptureFull": {
+    "message": "スクリーンショットを撮る（表示範囲）"
+  },
+  "cmdCaptureArea": {
+    "message": "スクリーンショットを撮る（範囲を選択）"
+  }
+}

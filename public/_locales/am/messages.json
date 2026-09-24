@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — ቪዲዮ እና ስክሪንሾት"
+  },
+  "extDescription": {
+    "message": "ከድምፅ ጋር ቪዲዮ ይቅረጹ እና በአካባቢ ምርጫ እና በአቋራጭ ቁልፎች ስክሪንሾት ያንሱ።"
+  },
+  "cmdToggleRecording": {
+    "message": "የቪዲዮ ቀረጻ ጀምር/አቁም"
+  },
+  "cmdCaptureFull": {
+    "message": "ስክሪንሾት አንሳ (የሚታይ አካባቢ)"
+  },
+  "cmdCaptureArea": {
+    "message": "ስክሪንሾት አንሳ (አካባቢ ምረጥ)"
+  }
+}

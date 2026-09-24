@@ -1,6 +1,6 @@
 {
   "name": "screenrec-toolkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "ScreenRec Toolkit — screenshot & screen recording browser extension (Chrome + Firefox).",
   "type": "module",

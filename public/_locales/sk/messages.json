@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video a snímka obrazovky"
+  },
+  "extDescription": {
+    "message": "Nahrávajte video so zvukom a vytvárajte snímky obrazovky s výberom oblasti a klávesovými skratkami."
+  },
+  "cmdToggleRecording": {
+    "message": "Spustiť/zastaviť nahrávanie videa"
+  },
+  "cmdCaptureFull": {
+    "message": "Vytvoriť snímku obrazovky (viditeľná oblasť)"
+  },
+  "cmdCaptureArea": {
+    "message": "Vytvoriť snímku obrazovky (vybrať oblasť)"
+  }
+}

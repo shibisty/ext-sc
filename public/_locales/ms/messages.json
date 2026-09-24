@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video dan Tangkapan Skrin"
+  },
+  "extDescription": {
+    "message": "Rakam video dengan audio dan ambil tangkapan skrin, dengan pemilihan kawasan dan kekunci pintasan."
+  },
+  "cmdToggleRecording": {
+    "message": "Mula/hentikan rakaman video"
+  },
+  "cmdCaptureFull": {
+    "message": "Ambil tangkapan skrin (kawasan kelihatan)"
+  },
+  "cmdCaptureArea": {
+    "message": "Ambil tangkapan skrin (pilih kawasan)"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video at Screenshot"
+  },
+  "extDescription": {
+    "message": "Mag-record ng video na may audio at kumuha ng screenshot, may pagpili ng area at mga shortcut key."
+  },
+  "cmdToggleRecording": {
+    "message": "Simulan/ihinto ang pag-record ng video"
+  },
+  "cmdCaptureFull": {
+    "message": "Kumuha ng screenshot (nakikitang bahagi)"
+  },
+  "cmdCaptureArea": {
+    "message": "Kumuha ng screenshot (pumili ng bahagi)"
+  }
+}

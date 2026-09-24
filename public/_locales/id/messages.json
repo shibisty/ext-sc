@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video dan Tangkapan Layar"
+  },
+  "extDescription": {
+    "message": "Rekam video dengan audio dan ambil tangkapan layar, dengan pemilihan area dan pintasan keyboard."
+  },
+  "cmdToggleRecording": {
+    "message": "Mulai/hentikan perekaman video"
+  },
+  "cmdCaptureFull": {
+    "message": "Ambil tangkapan layar (area terlihat)"
+  },
+  "cmdCaptureArea": {
+    "message": "Ambil tangkapan layar (pilih area)"
+  }
+}

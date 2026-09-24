@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — 동영상 및 스크린샷"
+  },
+  "extDescription": {
+    "message": "오디오와 함께 동영상을 녹화하고 영역 선택 및 단축키로 스크린샷을 찍습니다."
+  },
+  "cmdToggleRecording": {
+    "message": "동영상 녹화 시작/중지"
+  },
+  "cmdCaptureFull": {
+    "message": "스크린샷 찍기(보이는 영역)"
+  },
+  "cmdCaptureArea": {
+    "message": "스크린샷 찍기(영역 선택)"
+  }
+}

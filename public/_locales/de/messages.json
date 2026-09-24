@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video & Screenshot"
+  },
+  "extDescription": {
+    "message": "Video mit Ton aufnehmen und Screenshots erstellen, mit Bereichsauswahl und Tastenkombinationen."
+  },
+  "cmdToggleRecording": {
+    "message": "Videoaufnahme starten/stoppen"
+  },
+  "cmdCaptureFull": {
+    "message": "Screenshot aufnehmen (sichtbarer Bereich)"
+  },
+  "cmdCaptureArea": {
+    "message": "Screenshot aufnehmen (Bereich auswählen)"
+  }
+}

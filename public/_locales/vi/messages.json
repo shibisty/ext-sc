@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video và Ảnh chụp màn hình"
+  },
+  "extDescription": {
+    "message": "Quay video có âm thanh và chụp ảnh màn hình, với tính năng chọn vùng và phím tắt."
+  },
+  "cmdToggleRecording": {
+    "message": "Bắt đầu/dừng quay video"
+  },
+  "cmdCaptureFull": {
+    "message": "Chụp ảnh màn hình (vùng hiển thị)"
+  },
+  "cmdCaptureArea": {
+    "message": "Chụp ảnh màn hình (chọn vùng)"
+  }
+}

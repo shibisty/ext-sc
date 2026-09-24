@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video ja kuvakaappaus"
+  },
+  "extDescription": {
+    "message": "Tallenna videota äänen kanssa ja ota kuvakaappauksia alueen valinnalla ja pikanäppäimillä."
+  },
+  "cmdToggleRecording": {
+    "message": "Käynnistä/pysäytä videotallennus"
+  },
+  "cmdCaptureFull": {
+    "message": "Ota kuvakaappaus (näkyvä alue)"
+  },
+  "cmdCaptureArea": {
+    "message": "Ota kuvakaappaus (valitse alue)"
+  }
+}

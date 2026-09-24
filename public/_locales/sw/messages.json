@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video na Picha ya Skrini"
+  },
+  "extDescription": {
+    "message": "Rekodi video pamoja na sauti na piga picha za skrini, ukiwa na uchaguzi wa eneo na vitufe vya mkato."
+  },
+  "cmdToggleRecording": {
+    "message": "Anza/simamisha kurekodi video"
+  },
+  "cmdCaptureFull": {
+    "message": "Piga picha ya skrini (eneo linaloonekana)"
+  },
+  "cmdCaptureArea": {
+    "message": "Piga picha ya skrini (chagua eneo)"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video i snimka zaslona"
+  },
+  "extDescription": {
+    "message": "Snimajte video sa zvukom i izrađujte snimke zaslona s odabirom područja i tipkovničkim prečacima."
+  },
+  "cmdToggleRecording": {
+    "message": "Pokreni/zaustavi snimanje videa"
+  },
+  "cmdCaptureFull": {
+    "message": "Napravi snimku zaslona (vidljivo područje)"
+  },
+  "cmdCaptureArea": {
+    "message": "Napravi snimku zaslona (odaberi područje)"
+  }
+}
