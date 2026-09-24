@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — ویدیو و اسکرین‌شات"
+  },
+  "extDescription": {
+    "message": "ویدیو را همراه با صدا ضبط کنید و با انتخاب ناحیه و کلیدهای میانبر اسکرین‌شات بگیرید."
+  },
+  "cmdToggleRecording": {
+    "message": "شروع/توقف ضبط ویدیو"
+  },
+  "cmdCaptureFull": {
+    "message": "گرفتن اسکرین‌شات (ناحیه قابل‌مشاهده)"
+  },
+  "cmdCaptureArea": {
+    "message": "گرفتن اسکرین‌شات (انتخاب ناحیه)"
+  }
+}

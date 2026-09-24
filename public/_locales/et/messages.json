@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video ja ekraanipilt"
+  },
+  "extDescription": {
+    "message": "Salvesta videot koos heliga ja tee ekraanipilte, koos ala valiku ja kiirklahvidega."
+  },
+  "cmdToggleRecording": {
+    "message": "Alusta/peata video salvestamine"
+  },
+  "cmdCaptureFull": {
+    "message": "Tee ekraanipilt (nähtav ala)"
+  },
+  "cmdCaptureArea": {
+    "message": "Tee ekraanipilt (vali ala)"
+  }
+}

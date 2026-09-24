@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — व्हिडिओ आणि स्क्रीनशॉट"
+  },
+  "extDescription": {
+    "message": "ऑडिओसह व्हिडिओ रेकॉर्ड करा आणि क्षेत्र निवड व शॉर्टकट कींसह स्क्रीनशॉट घ्या."
+  },
+  "cmdToggleRecording": {
+    "message": "व्हिडिओ रेकॉर्डिंग सुरू/थांबवा"
+  },
+  "cmdCaptureFull": {
+    "message": "स्क्रीनशॉट घ्या (दृश्यमान भाग)"
+  },
+  "cmdCaptureArea": {
+    "message": "स्क्रीनशॉट घ्या (भाग निवडा)"
+  }
+}

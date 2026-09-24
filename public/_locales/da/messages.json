@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video og skærmbillede"
+  },
+  "extDescription": {
+    "message": "Optag video med lyd, og tag skærmbilleder med områdevalg og genvejstaster."
+  },
+  "cmdToggleRecording": {
+    "message": "Start/stop videooptagelse"
+  },
+  "cmdCaptureFull": {
+    "message": "Tag et skærmbillede (synligt område)"
+  },
+  "cmdCaptureArea": {
+    "message": "Tag et skærmbillede (vælg område)"
+  }
+}

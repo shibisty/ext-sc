@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Wideo i zrzut ekranu"
+  },
+  "extDescription": {
+    "message": "Nagrywaj wideo z dźwiękiem i rób zrzuty ekranu, z wyborem obszaru i skrótami klawiszowymi."
+  },
+  "cmdToggleRecording": {
+    "message": "Rozpocznij/zatrzymaj nagrywanie wideo"
+  },
+  "cmdCaptureFull": {
+    "message": "Zrób zrzut ekranu (widoczny obszar)"
+  },
+  "cmdCaptureArea": {
+    "message": "Zrób zrzut ekranu (wybierz obszar)"
+  }
+}

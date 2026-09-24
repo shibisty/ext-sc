@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Vidéo et capture d'écran"
+  },
+  "extDescription": {
+    "message": "Enregistrez des vidéos avec son et prenez des captures d'écran, avec sélection de zone et raccourcis clavier."
+  },
+  "cmdToggleRecording": {
+    "message": "Démarrer/arrêter l'enregistrement vidéo"
+  },
+  "cmdCaptureFull": {
+    "message": "Prendre une capture d'écran (zone visible)"
+  },
+  "cmdCaptureArea": {
+    "message": "Prendre une capture d'écran (sélectionner une zone)"
+  }
+}

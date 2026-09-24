@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — વિડિયો અને સ્ક્રીનશોટ"
+  },
+  "extDescription": {
+    "message": "ઓડિયો સાથે વિડિયો રેકોર્ડ કરો અને વિસ્તાર પસંદગી તથા શોર્ટકટ કીઝ સાથે સ્ક્રીનશોટ લો."
+  },
+  "cmdToggleRecording": {
+    "message": "વિડિયો રેકોર્ડિંગ શરૂ/બંધ કરો"
+  },
+  "cmdCaptureFull": {
+    "message": "સ્ક્રીનશોટ લો (દેખાતો વિસ્તાર)"
+  },
+  "cmdCaptureArea": {
+    "message": "સ્ક્રીનશોટ લો (વિસ્તાર પસંદ કરો)"
+  }
+}

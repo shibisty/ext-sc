@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — วิดีโอและภาพหน้าจอ"
+  },
+  "extDescription": {
+    "message": "บันทึกวิดีโอพร้อมเสียงและจับภาพหน้าจอ พร้อมการเลือกพื้นที่และปุ่มลัด"
+  },
+  "cmdToggleRecording": {
+    "message": "เริ่ม/หยุดการบันทึกวิดีโอ"
+  },
+  "cmdCaptureFull": {
+    "message": "จับภาพหน้าจอ (พื้นที่ที่มองเห็น)"
+  },
+  "cmdCaptureArea": {
+    "message": "จับภาพหน้าจอ (เลือกพื้นที่)"
+  }
+}

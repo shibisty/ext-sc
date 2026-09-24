@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video e Screenshot"
+  },
+  "extDescription": {
+    "message": "Registra video con audio e cattura screenshot, con selezione dell'area e scorciatoie da tastiera."
+  },
+  "cmdToggleRecording": {
+    "message": "Avvia/interrompi la registrazione video"
+  },
+  "cmdCaptureFull": {
+    "message": "Cattura uno screenshot (area visibile)"
+  },
+  "cmdCaptureArea": {
+    "message": "Cattura uno screenshot (seleziona area)"
+  }
+}

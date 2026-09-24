@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video ve Ekran Görüntüsü"
+  },
+  "extDescription": {
+    "message": "Sesli video kaydedin ve alan seçimi ile kısayol tuşlarını kullanarak ekran görüntüsü alın."
+  },
+  "cmdToggleRecording": {
+    "message": "Video kaydını başlat/durdur"
+  },
+  "cmdCaptureFull": {
+    "message": "Ekran görüntüsü al (görünür alan)"
+  },
+  "cmdCaptureArea": {
+    "message": "Ekran görüntüsü al (alan seç)"
+  }
+}

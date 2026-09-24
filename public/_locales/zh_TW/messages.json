@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — 影片與螢幕截圖"
+  },
+  "extDescription": {
+    "message": "錄製含聲音的影片並擷取螢幕截圖，支援區域選取與快速鍵。"
+  },
+  "cmdToggleRecording": {
+    "message": "開始/停止錄製影片"
+  },
+  "cmdCaptureFull": {
+    "message": "擷取螢幕截圖（可見區域）"
+  },
+  "cmdCaptureArea": {
+    "message": "擷取螢幕截圖（選取區域）"
+  }
+}

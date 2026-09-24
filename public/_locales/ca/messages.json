@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Vídeo i captura de pantalla"
+  },
+  "extDescription": {
+    "message": "Enregistra vídeo amb àudio i fes captures de pantalla, amb selecció d'àrea i dreceres de teclat."
+  },
+  "cmdToggleRecording": {
+    "message": "Inicia/atura l'enregistrament de vídeo"
+  },
+  "cmdCaptureFull": {
+    "message": "Fes una captura de pantalla (àrea visible)"
+  },
+  "cmdCaptureArea": {
+    "message": "Fes una captura de pantalla (selecciona àrea)"
+  }
+}

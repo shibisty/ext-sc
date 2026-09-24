@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Vaizdo įrašas ir ekrano kopija"
+  },
+  "extDescription": {
+    "message": "Įrašykite vaizdo įrašą su garsu ir darykite ekrano kopijas su srities pasirinkimu ir sparčiaisiais klavišais."
+  },
+  "cmdToggleRecording": {
+    "message": "Pradėti / sustabdyti vaizdo įrašymą"
+  },
+  "cmdCaptureFull": {
+    "message": "Padaryti ekrano kopiją (matoma sritis)"
+  },
+  "cmdCaptureArea": {
+    "message": "Padaryti ekrano kopiją (pasirinkti sritį)"
+  }
+}

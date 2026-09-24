@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video și captură de ecran"
+  },
+  "extDescription": {
+    "message": "Înregistrează video cu sunet și fă capturi de ecran, cu selectare a zonei și scurtături de la tastatură."
+  },
+  "cmdToggleRecording": {
+    "message": "Pornește/oprește înregistrarea video"
+  },
+  "cmdCaptureFull": {
+    "message": "Fă o captură de ecran (zonă vizibilă)"
+  },
+  "cmdCaptureArea": {
+    "message": "Fă o captură de ecran (selectează zona)"
+  }
+}

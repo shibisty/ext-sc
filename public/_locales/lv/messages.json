@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video un ekrānuzņēmums"
+  },
+  "extDescription": {
+    "message": "Ierakstiet video ar skaņu un uzņemiet ekrānuzņēmumus, izvēloties apgabalu un izmantojot īsinājumtaustiņus."
+  },
+  "cmdToggleRecording": {
+    "message": "Sākt/apturēt video ierakstīšanu"
+  },
+  "cmdCaptureFull": {
+    "message": "Uzņemt ekrānuzņēmumu (redzamā zona)"
+  },
+  "cmdCaptureArea": {
+    "message": "Uzņemt ekrānuzņēmumu (izvēlēties zonu)"
+  }
+}

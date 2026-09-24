@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video en schermafbeelding"
+  },
+  "extDescription": {
+    "message": "Neem video met geluid op en maak schermafbeeldingen, met gebiedsselectie en sneltoetsen."
+  },
+  "cmdToggleRecording": {
+    "message": "Video-opname starten/stoppen"
+  },
+  "cmdCaptureFull": {
+    "message": "Schermafbeelding maken (zichtbaar gebied)"
+  },
+  "cmdCaptureArea": {
+    "message": "Schermafbeelding maken (gebied selecteren)"
+  }
+}

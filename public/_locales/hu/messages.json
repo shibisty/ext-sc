@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Videó és képernyőkép"
+  },
+  "extDescription": {
+    "message": "Vegyél fel videót hanggal, és készíts képernyőképeket terület kijelöléssel és gyorsbillentyűkkel."
+  },
+  "cmdToggleRecording": {
+    "message": "Videofelvétel indítása/leállítása"
+  },
+  "cmdCaptureFull": {
+    "message": "Képernyőkép készítése (látható terület)"
+  },
+  "cmdCaptureArea": {
+    "message": "Képernyőkép készítése (terület kijelölése)"
+  }
+}

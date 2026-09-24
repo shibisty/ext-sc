@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "ScreenRec Toolkit — Video in posnetek zaslona"
+  },
+  "extDescription": {
+    "message": "Snemajte video z zvokom in ustvarjajte posnetke zaslona z izbiro območja in bližnjicami na tipkovnici."
+  },
+  "cmdToggleRecording": {
+    "message": "Začni/ustavi snemanje videa"
+  },
+  "cmdCaptureFull": {
+    "message": "Zajemi posnetek zaslona (vidno območje)"
+  },
+  "cmdCaptureArea": {
+    "message": "Zajemi posnetek zaslona (izberi območje)"
+  }
+}

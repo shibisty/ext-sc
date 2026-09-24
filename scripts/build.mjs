@@ -6,10 +6,13 @@
 //   1. Compile src/**/*.ts -> build/ts/**/*.js (tsc; see tsconfig.json for
 //      why some of those compile as classic scripts and others as ES
 //      modules).
-//   2. Copy public/ (HTML/CSS/icons/_locales/gif images — everything except
-//      gif-library/index.json, which step 4 generates instead of
-//      copying) into dist/chrome and dist/firefox.
-//   3. Copy build/ts/*.js (including lib/) into both dist folders.
+//   2. Copy public/ (HTML/CSS/icons/_locales/gif images) into dist/chrome
+//      and dist/firefox, then verify every source file actually landed
+//      (see copyVerified() below) — gif-library/index.json is copied too
+//      if a stale one exists, but step 4 unconditionally regenerates and
+//      overwrites it from the real folder contents right after.
+//   3. Copy build/ts/*.js (including lib/) into both dist folders, same
+//      copy-then-verify.
 //   4. Generate gif-library/index.json by scanning the actual
 //      public/gif-library folder — this is the fix for the "not all GIFs
 //      get picked up" bug: the manifest can no longer go stale, because it
@@ -37,6 +40,57 @@ function log(msg) {
   console.log(`[build] ${msg}`);
 }
 
+// Recursively lists every regular file under `dir`, as paths relative to
+// it (forward-slash-joined regardless of platform).
+function listFilesRecursive(dir, rel = "", out = []) {
+  for (const entry of readdirSync(path.join(dir, rel), { withFileTypes: true })) {
+    const relPath = rel ? `${rel}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) listFilesRecursive(dir, relPath, out);
+    else if (entry.isFile()) out.push(relPath);
+  }
+  return out;
+}
+
+// `fs.promises.cp(src, dest, { recursive: true })` has shown a real,
+// reproducible failure mode on this project's Windows build machine: it
+// resolves successfully — no thrown error — after copying only SOME of a
+// source directory's files. Caught directly: public/gif-library's 74 real
+// images, only 14 of which made it into dist/chrome/gif-library. That
+// wasn't a bug in gif-library's own manifest generator (scanGifLibrary()
+// faithfully reported what was actually sitting in the copied folder) —
+// it was the copy step silently under-delivering upstream of it, so the
+// user saw a GIF count in the app that didn't match the real library.
+// This wraps every recursive copy in the build with a same-tree
+// verification (every source file present at the destination, matching
+// size) and a few retries before giving up — the failure mode looks like
+// a transient Windows/antivirus file lock, which a retry has a good
+// chance of clearing — so a build either genuinely matches its source or
+// fails loudly with exactly which files didn't make it, instead of
+// silently shipping a partial package.
+async function copyVerified(src, dest, label, attempts = 3) {
+  let problems = [];
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    await cp(src, dest, { recursive: true });
+    problems = listFilesRecursive(src).filter((rel) => {
+      const destPath = path.join(dest, rel);
+      if (!existsSync(destPath)) return true;
+      return statSync(destPath).size !== statSync(path.join(src, rel)).size;
+    });
+    if (problems.length === 0) {
+      if (attempt > 1) log(`${label}: copy verified complete on attempt ${attempt}`);
+      return;
+    }
+    log(`${label}: copy incomplete on attempt ${attempt}/${attempts} (${problems.length} file(s) missing or size-mismatched)`);
+  }
+  throw new Error(
+    `${label}: copy from "${src}" to "${dest}" is still incomplete after ${attempts} attempts — ` +
+      `${problems.length} file(s) missing or wrong size, e.g. ${problems.slice(0, 10).join(", ")}` +
+      `${problems.length > 10 ? ` (+${problems.length - 10} more)` : ""}. This has been observed as a real, ` +
+      `intermittent fs.cp() issue on this machine (see ARCHITECTURE.md) — re-running the build usually clears ` +
+      `it; if it keeps failing, check for antivirus/indexing locks on the project folder.`
+  );
+}
+
 async function run() {
   log("Compiling TypeScript (tsc -p tsconfig.json)...");
   execFileSync("tsc", ["-p", "tsconfig.json"], { cwd: ROOT, stdio: "inherit", shell: process.platform === "win32" });
@@ -49,10 +103,10 @@ async function run() {
     await mkdir(outDir, { recursive: true });
 
     log(`[${browser}] copying static assets from public/...`);
-    await cp(path.join(ROOT, "public"), outDir, { recursive: true });
+    await copyVerified(path.join(ROOT, "public"), outDir, `[${browser}] public/`);
 
     log(`[${browser}] copying compiled JS from build/ts/...`);
-    await cp(path.join(ROOT, "build", "ts"), outDir, { recursive: true });
+    await copyVerified(path.join(ROOT, "build", "ts"), outDir, `[${browser}] build/ts/`);
 
     log(`[${browser}] generating gif-library/index.json...`);
     const manifest = await scanGifLibrary(path.join(outDir, "gif-library"));
